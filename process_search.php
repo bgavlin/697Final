@@ -1,6 +1,10 @@
 <?php 
 include_once 'header.php';
+?>
 
+<h2 class="subtitle"> Search Results </h2>
+
+<?php 
 //Checks if user entered text in the search bar
 if (isset($_GET['userinput'])) { 
 	$search_string = sanitizeString($_GET['userinput']);
@@ -13,9 +17,16 @@ if (isset($_GET['userinput'])) {
     if (!$result) die ("Database access failed: " . $conn->error);
     $rows = $result->num_rows;
     
+    if ($rows == 0) {
+		echo "<p class=error> No recipes identified that match ".$search_string.".</p>";
+        echo "<form action=\"search.php\"><input type=\"submit\" value=
+        \"Try Another Search!\"></form>";
+	} 
+    else{
     while ($row = $result->fetch_assoc()) {
         echo '<tr>';
         echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+    }
     }?>
 </table>
 <?php
@@ -34,11 +45,16 @@ if (isset($_GET['course'])) {
     $result = $conn->query($query); 
     if (!$result) die ("Database access failed: " . $conn->error);
     $rows = $result->num_rows;
-    
+    if ($rows == 0) {
+		echo "<p class=error> No recipes identified that match ".$course.".</p>";
+        echo "<form action=\"search.php\"><input type=\"submit\" value=
+        \"Try A Different Filter\"></form>";
+	} else{
     while ($row = $result->fetch_assoc()) {
         echo '<tr>';
         echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
-    }?>
+    }
+}?>
 </table>
 
 <?php
@@ -52,17 +68,22 @@ if (isset($_GET['course'])) {
 //Checks if user selected a cooking method
 if (isset($_GET['method'])) { 
 	$method = sanitizeString($_GET['method']);
-    echo "<p>Cooking Method Selected: " .$ingredient. "</p>";
+    echo "<p>Cooking Method Selected: " .$method. "</p>";
 
     $query = "SELECT Cooking_Methods.Method_ID, Method_Junction.Recipe_ID, Recipe_Information.* FROM Cooking_Methods NATURAL JOIN Method_Junction NATURAL JOIN Recipe_Information WHERE Method = \"$method\"";
     
     $result = $conn->query($query); 
     if (!$result) die ("Database access failed: " . $conn->error);
     $rows = $result->num_rows;
-    
+    if ($rows == 0) {
+        echo "<p class=error> No recipes identified that match ".$method.".</p>";
+        echo "<form action=\"search.php\"><input type=\"submit\" value=
+        \"Try A Different Filter\"></form>";
+	} else{
     while ($row = $result->fetch_assoc()) {
         echo '<tr>';
         echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+    }
     }?>
 </table>
 
@@ -73,7 +94,7 @@ if (isset($_GET['method'])) {
 
 if (isset($_GET['diet'])) { 
 	$diet = sanitizeString($_GET['diet']);
-    echo "<p>Dietary Restriction Selected: " .$diet. "</p>";
+    echo "<p>Dietary Restriction Selected: " .$diet. ".</p>";
 
     $query = "SELECT Dietary_Concerns.Diet_ID, Diet_Junction.Recipe_ID, Recipe_Information.* FROM Dietary_Concerns NATURAL JOIN Diet_Junction NATURAL JOIN Recipe_Information WHERE Diet_Type = \"$diet\"";
     
@@ -81,9 +102,15 @@ if (isset($_GET['diet'])) {
     if (!$result) die ("Database access failed: " . $conn->error);
     $rows = $result->num_rows;
     
+    if ($rows == 0) {
+		echo "<p class=error> No recipes identified that match ".$diet."</p>";
+        echo "<form action=\"search.php\"><input type=\"submit\" value=
+        \"Try A Different Filter\"></form>";
+	} else{
     while ($row = $result->fetch_assoc()) {
         echo '<tr>';
         echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+    }
     }?>
 </table>
 <?php
@@ -94,17 +121,22 @@ if (isset($_GET['diet'])) {
 //Checks if user selected an ingredient
 if (isset($_GET['ingredient'])) { 
 	$ingredient = sanitizeString($_GET['ingredient']);
-    echo "<p>Ingredient Selected: " .$ingredient. "</p>";
+    echo "<p>Ingredient Selected: " .$ingredient. ".</p>";
 
     $query = "SELECT Ingredients.Ingredient_ID, Ingredient_Junction.Recipe_ID, Recipe_Information.* FROM Ingredients NATURAL JOIN Ingredient_Junction NATURAL JOIN Recipe_Information WHERE Ingredient = \"$ingredient\"";
     
     $result = $conn->query($query); 
     if (!$result) die ("Database access failed: " . $conn->error);
     $rows = $result->num_rows;
-    
+        if ($rows == 0) {
+		echo "<p class=error> No recipes identified with ".$ingredient."</p>";
+        echo "<form action=\"search.php\"><input type=\"submit\" value=
+        \"Try A Different Filter\"></form>";
+	} else{
     while ($row = $result->fetch_assoc()) {
         echo '<tr>';
         echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+    }
     }?>
 </table>
 <?php

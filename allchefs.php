@@ -2,29 +2,37 @@
 include_once 'header.php';
 ?>
 
-<h1 class='title'> Bridget's Family Recipes </h1>
 <h2 class='subtitle'> Family Chefs </h2>
 <div id='intro'> </div>
 
-<table>
 <?php
 
-$query = "SELECT Chefs.Image_Path, Family_Members.First_Name, Last_Name, Birth_Year, Death_Year, Recipe_Information.Recipe_ID, Recipe_Information.Title FROM Chefs  JOIN Family_Members ON Chefs.Member_ID=Family_Members.Member_ID JOIN Recipe_Information On Recipe_Information.Chef_ID=Chefs.Chef_ID";
+$query = "SELECT Chefs.Image_Path,Chefs.Chef_ID, Family_Members.First_Name, Last_Name, Birth_Year, Death_Year FROM Chefs  JOIN Family_Members ON Chefs.Member_ID=Family_Members.Member_ID ORDER BY Family_Members.First_Name";
 
 $result = $conn->query($query);      
 if (!$result) die ("Database access failed: " . $conn->error);
 $rows = $result->num_rows;
 
-print_r($result);
+echo "<table class='allbutchef'><tr> <th>Photo</th> <th>Chef</th> <th>Recipes</th><tr>";
     
-echo "<table class='display_contents'><tr> <th>Photo</th> <th>Chef</th> <th>Recipes</th><tr>";
-
 while ($row = $result->fetch_assoc()) {
     echo "<td><img src=\"".$row['Image_Path']."\" alt=\"chef photo\"width=\"128\" height=\"128\"></img></td>";
-    echo "<td>".$row["First_Name"]." ".$row["Last_Name"]."</td>";
-    echo "<td>".$row["Title"]."</td></tr>";
+    echo "<td><a href=\"viewchef.php?Chef_ID=".$row['Chef_ID']."\">".$row["First_Name"]." ".$row["Last_Name"]."</a></td>";
+    echo "<td>";    
+        //LOOP THROUGH A SECOND QUERY
+        $query_recipes="SELECT Title, Recipe_ID FROM Recipe_Information WHERE         Chef_ID=".$row['Chef_ID'];
+            
+        $result2 = $conn->query($query_recipes);
+            
+        if (!$result2) die ("Database access failed: " . $conn->error);
+        $rows = $result2->num_rows;          
+        while ($row = $result2->fetch_assoc()) {
+            echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br>";
+            }
+            
+    echo "</td></tr>";
 }
-    
+
 ?>
 </table>
 
