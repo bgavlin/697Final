@@ -16,7 +16,7 @@ if ($conn->connect_error) die($conn->connect_error);
 </head>    
     
 <body>
-    
+<div class="wrapper">
 <div class="header">
     <div class="innerheader">
 <h1 class='title'> My Family Recipes </h1>
@@ -31,11 +31,12 @@ if ($conn->connect_error) die($conn->connect_error);
     <ul>
 <!--Use a SQL query to retrieve Chef Links-->
         <?php
-        $query = "SELECT Family_Members.`Member_ID`, First_Name, Last_Name, Chefs.Chef_ID FROM Family_Members JOIN Chefs ON Family_Members.Member_ID=Chefs.Member_ID";
+        $query = "SELECT Family_Members.`Member_ID`, First_Name, Last_Name, Chefs.Chef_ID FROM Family_Members JOIN Chefs ON Family_Members.Member_ID=Chefs.Member_ID ORDER BY First_Name ASC";
         $result = $conn->query($query);
         if (!$result) die ("Database access failed." . $conn->error);
         $rows = $result->num_rows;
 
+//Using the chef links to form the Chefs menu
         while ($row = $result->fetch_assoc()) {
             echo "<li><a href=\"viewchef.php?Chef_ID=".$row['Chef_ID']."\">".$row['First_Name']." ".$row['Last_Name'].'</a></li>';
 //        print_r($row['Member_ID']);

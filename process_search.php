@@ -5,10 +5,11 @@ include_once 'header.php';
 <h2 class="subtitle"> Search Results </h2>
 
 <?php 
-//Checks if user entered text in the search bar
+//Checks if user entered text in the search bar and sanitizes the text as a safety measure
 if (isset($_GET['userinput'])) { 
 	$search_string = sanitizeString($_GET['userinput']);
     
+    if ($search_string != ""){
     echo "<p>You searched for: " .$search_string. "</p>";
     
     $query = "SELECT * FROM Recipe_Information WHERE MATCH (Full_Recipe) AGAINST (\"$search_string\")";
@@ -17,25 +18,34 @@ if (isset($_GET['userinput'])) {
     if (!$result) die ("Database access failed: " . $conn->error);
     $rows = $result->num_rows;
     
+//    Message if search returns no results 
     if ($rows == 0) {
 		echo "<p class=error> No recipes identified that match ".$search_string.".</p>";
         echo "<form action=\"search.php\"><input type=\"submit\" value=
         \"Try Another Search!\"></form>";
 	} 
+//    if search returns results, display a list of recipes
     else{
     while ($row = $result->fetch_assoc()) {
-        echo '<tr>';
-        echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+        echo "<div class=\'results\'><li><a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a></li><div>";
     }
-    }?>
-</table>
-<?php
-} else { 
+        echo "<br> <i>Didn't find what you're looking for?</i><br><br><form action=\"search.php\"><input type=\"submit\" value=
+        \"Try Another Search!\"></form>";
+    }
+}
+//if user has not entered text, give error
+    else{
+        echo "You didn't enter a value!<br>";
+        echo "<br><form action=\"search.php\"><input type=\"submit\" value=
+        \"Try Another Search!\"></form>";
+    }
+}
+else { 
 	$search_string = "(Not entered)";
 }
 
 
-//Checks if user selected a meal course
+//Checks if user selected a meal course and returns matching recipes in a list
 if (isset($_GET['course'])) { 
 	$course = sanitizeString($_GET['course']);
     echo "<p>Course Selected: " .$course. "</p>";
@@ -51,11 +61,11 @@ if (isset($_GET['course'])) {
         \"Try A Different Filter\"></form>";
 	} else{
     while ($row = $result->fetch_assoc()) {
-        echo '<tr>';
-        echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+        echo "<li><a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a></li>";
     }
+        echo "<br> <i>Didn't find what you're looking for?</i><br><br><form action=\"search.php\"><input type=\"submit\" value=
+        \"Try Another Search!\"></form>";
 }?>
-</table>
 
 <?php
     
@@ -81,11 +91,11 @@ if (isset($_GET['method'])) {
         \"Try A Different Filter\"></form>";
 	} else{
     while ($row = $result->fetch_assoc()) {
-        echo '<tr>';
-        echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+        echo "<li><a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a></li>";
     }
+        echo "<br> <i>Didn't find what you're looking for?</i><br><br><form action=\"search.php\"><input type=\"submit\" value=
+        \"Try Another Search!\"></form>";
     }?>
-</table>
 
 <?php
 } else { 
@@ -108,9 +118,10 @@ if (isset($_GET['diet'])) {
         \"Try A Different Filter\"></form>";
 	} else{
     while ($row = $result->fetch_assoc()) {
-        echo '<tr>';
-        echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+        echo "<li><a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a></li>";
     }
+        echo "<br> <i>Didn't find what you're looking for?</i><br><br><form action=\"search.php\"><input type=\"submit\" value=
+        \"Try Another Search!\"></form>";
     }?>
 </table>
 <?php
@@ -134,15 +145,18 @@ if (isset($_GET['ingredient'])) {
         \"Try A Different Filter\"></form>";
 	} else{
     while ($row = $result->fetch_assoc()) {
-        echo '<tr>';
-        echo "<a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a><br></tr>";
+        echo "<li><a href=\"viewrecipe.php?Recipe_ID=".$row['Recipe_ID']."\">".$row["Title"]."</a></li>";
     }
+        echo "<br> <i>Didn't find what you're looking for?</i><br><br><form action=\"search.php\"><input type=\"submit\" value=
+        \"Try Another Search!\"></form>";
     }?>
 </table>
 <?php
 } else { 
 	$method = "(None selected)";
 }
+
+echo"<br>";
 
 //Sanitize string function
 function sanitizeString($var)
@@ -153,4 +167,5 @@ function sanitizeString($var)
 	return $var;
 }
 
+include_once 'footer.php';
 ?>

@@ -1,8 +1,8 @@
 <?php
 include_once 'header.php';
 
-$conn = new mysqli($hn, $un, $pw, $db);
-if ($conn->connect_error) die($conn->connect_error);
+//$conn = new mysqli($hn, $un, $pw, $db);
+//if ($conn->connect_error) die($conn->connect_error);
 
 echo '<h2 class=\'subtitle\'>Recipe Information</h2>';
 
