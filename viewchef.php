@@ -24,8 +24,8 @@ if (isset($_GET['Chef_ID'])) {
     elseif ($rows > 0){
 		while ($row = $result->fetch_assoc()) {
 			echo '<div class=\'chef\'><h2 class=\'subtitle\'>'.$row['First_Name']." ".$row['Last_Name'].'</h2>';
-			echo "<div><img src=\"".$row['Image_Path']."\" alt=\"chef photo\"width=\"250\" height=\"250\"></img></div></div>";
-            
+			echo "<div><img src=\"images/".$row['Image_Path']."\" alt=\"chef photo\"width=\"250\" height=\"250\"></img></div></div>";
+//Loop through and find chef's recipes            
             $query2 ="SELECT Recipe_ID, Title FROM Recipe_Information WHERE Chef_ID=".$chefid;
             
             $result2 = $conn->query($query2);

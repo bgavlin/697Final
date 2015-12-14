@@ -16,7 +16,7 @@ $rows = $result->num_rows;
 echo "<table class='allbutchef'><tr> <th>Photo</th> <th>Chef</th> <th>Recipes</th><tr>";
     
 while ($row = $result->fetch_assoc()) {
-    echo "<td><img src=\"".$row['Image_Path']."\" alt=\"chef photo\"width=\"128\" height=\"128\"></img></td>";
+    echo "<td><img src=\"images/".$row['Image_Path']."\" alt=\"chef photo\"width=\"128\" height=\"128\"></img></td>";
     echo "<td><a href=\"viewchef.php?Chef_ID=".$row['Chef_ID']."\">".$row["First_Name"]." ".$row["Last_Name"]."</a></td>";
     echo "<td>";    
         //Loop through a second query to retrieve the chef's recipes
